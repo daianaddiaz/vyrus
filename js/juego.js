@@ -1,13 +1,22 @@
 
 let app;
 
+
+let texturaFondo;
+let animacionCelularSanaCeleste = [];
+let animacionCelularVerde = [];
+let animacionVirus = [];
+let animacionTorre = [];
+let texturaMuro;
+
+
 async function iniciarJuego() {
     
     app = new PIXI.Application();
     
     await app.init({
         resizeTo: window,           
-        backgroundColor: 0x0c0c14,  
+        backgroundColor: 197920,  
         antialias: true,           
         resolution: window.devicePixelRatio || 1,  
     });
@@ -29,7 +38,14 @@ async function iniciarJuego() {
 
 async function cargarAssets() {
    
-    console.log("Listo para cargar assets...");
+    console.log("Cargando Assets...");
+
+    try {
+        PIXI.Assets.add({alias: 'torreEstatica', src:"../assets/maquina de curacion.json"})
+        PIXI.Assets.add({alias: 'torreCurando', src:"../assets/maquina de curacion - heal.json"})
+        PIXI.Assets.add({alias: 'torreCooldown', src:"../assets/maquina de curacion cooldown.json"})
+        PIXI.Assets.add({alias: 'bacteriaVerdeDireccion', src:"../assets/Salto derecha abajo celeste.json"})
+    }
 }
 
 
