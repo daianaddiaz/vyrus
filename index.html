@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyrus</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.0.0/pixi.min.js"></script>
+</head>
+<body>
+
+    <div id="game-container">
+        
+        <div id="ui-overlay">
+            
+            <div class="caos-container">
+                <span class="caos-label">NIVEL DE CAOS:</span>
+                <div class="caos-bar-max">
+                    <div id="caos-bar-fill"></div>
+                </div>
+                <div id="cronometro">00:00</div>
+            </div>
+
+            <div class="botonera">
+                
+                <button id="btn-torre" class="btn-estructura" data-tipo="torre">
+                    <span class="btn-icon">💉</span> <span class="btn-text">Vacuna</span>
+                    <div id="cooldown-torre" class="cooldown-overlay"></div>
+                </button>
+
+                <button id="btn-muro" class="btn-estructura" data-tipo="muro">
+                    <span class="btn-icon">🚧</span> <span class="btn-text">Muro</span>
+                    <div id="cooldown-muro" class="cooldown-overlay"></div>
+                </button>
+                
+            </div>
+
+        </div>
+
+        </div>
+
+    <script type="module" src="js/npc.js"></script>
+    <script type="module" src="js/torres.js"></script>
+    <script type="module" src="js/gameObject.js"></script>
+</body>
+</html>
