@@ -1,0 +1,39 @@
+{
+  "frames": {
+    "spritesheet completo celeste.png": {
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 212,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 2,
+        "y": 2,
+        "w": 212,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 216,
+        "h": 180
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "bacteriaSana.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 214,
+      "h": 178
+    },
+    "scale": 1
+  }
+}
