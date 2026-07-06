@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* 1. Usamos tu fondo de petri centrado y cubriendo la pantalla */
+            background: url('assets/placa_petri.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Tourney', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 2. Capa general de transparencia para oscurecer la placa de fondo */
+        .overlay-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 5, 8, 0.75);
+            z-index: 1;
+        }
+
+        /* 3. El contenedor central (Rectángulo especificado) */
+        .ranking-box {
+            position: relative;
+            z-index: 2; /* Por encima del overlay */
+            background: #111111;
+            border: 3px solid #33ff33;
+            padding: 35px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(51, 255, 51, 0.25);
+        }
+
+        h2 {
+            color: #33ff33;
+            margin-top: 0;
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(51, 255, 51, 0.4);
+        }
+
+        .tabla-body {
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .fila-ranking {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            padding-bottom: 6px;
+        }
+
+        .btn-volver {
+            background: rgba(51, 255, 51, 0.15);
+            border: 2px solid #33ff33;
+            color: #33ff33;
+            padding: 10px 30px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-volver:hover {
+            background: #33ff33;
+            color: #000;
+            box-shadow: 0 0 10px #33ff33;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Capa de Oscuridad -->
+    <div class="overlay-bg"></div>
+
+    <!-- Caja del Ranking -->
+    <div class="ranking-box">
+        <h2>POSICIONES</h2>
+        
+        <div id="ranking-render-body" class="tabla-body">
+            <!-- Los puntajes se inyectan acá con JavaScript -->
+        </div>
+        
+        <button class="btn-volver" id="btn-regresar">INICIO</button>
+    </div>
+
+    <script>
+        
+        const tabla = document.getElementById('ranking-render-body');
+        let datosRanking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
+        
+        const estilosPodio = [
+            { prefijo: '1st', color: '#FFFF00' }, // Oro
+            { prefijo: '2nd', color: '#FF9900' }, // Plata
+            { prefijo: '3rd', color: '#ff6600' }  // Bronce
+        ];
+
+        
+        tabla.innerHTML = '';
+
+        
+        if (datosRanking.length === 0) {
+            tabla.innerHTML = `<div style="color: #666; font-size: 16px;">SIN REGISTROS DE SIMULACIÓN</div>`;
+        } else {
+            datosRanking.forEach((puesto, index) => {
+                let prefijo = `${index + 1}th`;
+                let colorFila = '#FFFFFF';
+
+                if (index < 3) {
+                    prefijo = estilosPodio[index].prefijo;
+                    colorFila = estilosPodio[index].color;
+                }
+
+                const divFila = document.createElement('div');
+                divFila.className = 'fila-ranking';
+                divFila.style.color = colorFila;
+
+                // puesto.nombre y puesto.puntaje ahora se van a guardar bien al corregir juego.js
+                divFila.innerHTML = `
+                    <span><strong>${prefijo}</strong> &nbsp; ${(puesto.nombre || 'ANÓNIMO').toUpperCase()}</span>
+                    <span>${puesto.puntaje || 0} PTS</span>
+                `;
+                tabla.appendChild(divFila);
+            });
+        }
+
+        // Botón para volver a jugar e ingresar otro nombre
+        document.getElementById('btn-regresar').addEventListener('click', () => {
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>

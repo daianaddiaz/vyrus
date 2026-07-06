@@ -4,7 +4,8 @@ export default class EntidadJuego {
     this.container = new PIXI.Container();
     
     // Fisicas Basicas
-    
+    const anchoPantalla = this.motor.app.screen.width;
+    this.factorEscala = anchoPantalla / 800;
     this.posicion = { x: x, y: y };
     this.velocidad = { x: 0, y: 0 };
     this.aceleracion = { x: 0, y: 0 };
@@ -15,6 +16,8 @@ export default class EntidadJuego {
     this.modoZombieActivo = false; 
 
     // Logica de Vida
+
+    this.nuncaTocadaPorVirus = true;
 
     this.esCurada = esCurada; 
     if (this.esCurada) {

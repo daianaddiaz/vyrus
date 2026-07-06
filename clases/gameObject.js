@@ -75,6 +75,7 @@ export default class GameObject {
     if (this.containerPrincipal) {
       this.containerPrincipal.sortChildren();
     }
+
   }
 
 
@@ -169,7 +170,7 @@ export default class GameObject {
 
   desatarGameOver() {
     this.juegoTerminado = true;
-    this.app.ticker.stop();
+    this.app.ticker.stop()
 
    
     const screenGameOver = document.getElementById('game-over-screen');
@@ -213,8 +214,8 @@ export default class GameObject {
 
   desatarVictoria() {
     this.juegoTerminado = true;
-    this.app.ticker.stop(); 
-    
+    this.app.ticker.stop()
+
     const screenVictory = document.getElementById('victory-screen');
     if (screenVictory) {
       screenVictory.style.display = 'flex';

@@ -8,10 +8,14 @@ let texturaFondo;
 let spritesheetVirus;
 let spritesheetTorre;
 
+let nombreUsuario = localStorage.getItem('nombreUsuarioActual') || 'Anónimo';
+
+
 async function iniciarJuego() {
     motor = new GameObject();
-    await motor.init();
-    await cargarAssets();
+    await motor.init(); 
+    await cargarAssets(); 
+   
 }
 
 async function cargarAssets() {
@@ -44,7 +48,7 @@ async function cargarAssets() {
         fondoSprite.y = motor.app.screen.height / 2;
         motor.app.stage.addChildAt(fondoSprite, 0); 
 
-        // Spawn de Bacterias (150 iniciales en la placa)
+        // Spawn de Bacterias (100 iniciales en la placa)
         const cantidadBacterias = 100;
         const centroX = motor.app.screen.width / 2;
         const centroY = motor.app.screen.height / 2;
@@ -68,6 +72,8 @@ async function cargarAssets() {
 
         crearBotonTorreUI();
 
+        motor.app.ticker.add(verificarFinDePartida); //monitoreo de final de partida
+
         window.addEventListener('resize', () => {
             fondoSprite.x = motor.app.screen.width / 2;
             fondoSprite.y = motor.app.screen.height / 2;
@@ -78,6 +84,19 @@ async function cargarAssets() {
     }
 }
 
+function fondoTextureSetup(fondoTex) { // funcion auxiliar
+    texturaFondo = fondoTex;
+    const fondoSprite = new PIXI.Sprite(texturaFondo);
+    fondoSprite.anchor.set(0.5);
+    fondoSprite.x = motor.app.screen.width / 2;
+    fondoSprite.y = motor.app.screen.height / 2;
+    motor.app.stage.addChildAt(fondoSprite, 0); 
+
+    window.addEventListener('resize', () => {
+        fondoSprite.x = motor.app.screen.width / 2;
+        fondoSprite.y = motor.app.screen.height / 2;
+});
+}
         // drag and drop
 function crearBotonTorreUI() {
     const posX = motor.app.screen.width / 2;
@@ -94,7 +113,24 @@ function crearBotonTorreUI() {
     
     torreUI.container.addChildAt(botoneraFondo, 0);
 
-    
+    const textoTimer = new PIXI.Text({
+        text: '',
+        style: {
+            fontFamily: 'Tourney',
+            fontSize: Math.floor(28), // Fluido con la pantalla
+            fill: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 5,
+            align: 'center',
+            fontWeight: 'bold'
+        }
+    });
+    textoTimer.anchor.set(0.5, 0.5);
+    textoTimer.y = 0; 
+    textoTimer.visible = false;
+     
+    torreUI.container.addChild(textoTimer);
+
     torreUI.container.eventMode = 'static';
     torreUI.container.cursor = 'pointer';
 
@@ -154,7 +190,7 @@ function crearBotonTorreUI() {
         }
 
         // Si interfiere con el campo del Alfa, se cancela la acción y se conserva el tiro
-        
+
         if (zonaBloqueada) {
             console.log("❌ ZONA INHIBIDA: El Virus Alfa interfiere con la torre de sanidad.");
             torreFantasma.destroy();
@@ -173,13 +209,23 @@ function crearBotonTorreUI() {
         tiempoCooldown = 10 * 60;
         torreUI.cambiarAnimacion('cooldown');
 
+        textoTimer.visible = true;
+        textoTimer.text = "10";
+
         const chequearCooldown = () => {
             if (!motor.juegoTerminado) {
                 tiempoCooldown--;
                 
+                const segundosRestantes = Math.ceil(tiempoCooldown / 60);
+                textoTimer.text = segundosRestantes.toString();
+
                 if (tiempoCooldown <= 0) {
                     enCooldown = false;
                     torreUI.cambiarAnimacion('disponible');
+
+                    textoTimer.visible = false;
+                    textoTimer.text = '';
+
                     motor.app.ticker.remove(chequearCooldown);
                 }
             }
@@ -191,4 +237,41 @@ function crearBotonTorreUI() {
     motor.app.stage.on('pointerupoutside', soltarTorre);
 }
 
-iniciarJuego();
+iniciarJuego(); // Ejecución inicial
+
+
+function verificarFinDePartida() {
+    if (motor.juegoTerminado) return;
+
+    const bacteriasVivas = motor.gameObjects.filter(obj => obj.isBacteria && !obj.isDead && !obj.modoZombieActivo);
+    const virusActivos = motor.gameObjects.filter(obj => obj.isVirus && !obj.isDead);
+
+    if (bacteriasVivas.length === 0 || virusActivos.length === 0) {
+        motor.juegoTerminado = true;
+        console.log("Partida finalizada. Calculando resultados de " + nombreUsuario);
+        finalizarYCalcularRanking();
+    } // <-- ¡ESTA LLAVE FALTA EN TU ARCHIVO ORIGINAL!
+}
+
+function finalizarYCalcularRanking() {
+    const vivas = motor.gameObjects.filter(obj => obj.isBacteria && !obj.isDead && !obj.modoZombieActivo);
+    const perfectas = motor.gameObjects.filter(obj => obj.isBacteria && !obj.isDead && obj.nuncaTocadaPorVirus);
+
+    const puntosPorVivas = vivas.length * 150;
+    const puntosPorPerfectas = perfectas.length * 300;
+    const puntajeFinal = puntosPorVivas + puntosPorPerfectas;
+
+    console.log(` Resultados: Vivas (${vivas.length}) | Intactas (${perfectas.length})`);
+
+    let ranking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
+    ranking.push({ nombre: nombreUsuario, puntaje: puntajeFinal, fecha: new Date().toLocaleDateString() });
+    ranking.sort((a, b) => b.puntaje - a.puntaje);
+    ranking = ranking.slice(0, 5);
+    localStorage.setItem('rankingBacterias', JSON.stringify(ranking));
+    
+    if (vivas.length === 0) {
+        document.getElementById('game-over-screen').style.display = 'flex';
+    } else {
+        document.getElementById('victory-screen').style.display = 'flex';
+    }
+}

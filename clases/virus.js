@@ -181,7 +181,8 @@ export default class Virus {
 
            
             if (distancia < radioContagio) {
-                
+
+                obj.nuncaTocadaPorVirus = false; // saco el invicto
                 // direccion del impacto            
                 const nx = distancia > 0 ? dx / distancia : Math.random() - 0.5;
                 const ny = distancia > 0 ? dy / distancia : Math.random() - 0.5;
