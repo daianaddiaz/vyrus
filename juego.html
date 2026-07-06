@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icono.jpeg" type="image/x-icon">
+    <title>Vyrus</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        
+        #inicio-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #030508;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Tourney', sans-serif;
+        }
+        .login-box {
+            background: rgba(17, 17, 17, 0.9);
+            border: 3px solid #33ff33;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(51, 255, 51, 0.3);
+            width: 90%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        .login-box h1 {
+            color: #33ff33;
+            font-size: 26px;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+        }
+        .login-box input[type="text"] {
+            background: #222;
+            border: 2px solid #555;
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 6px;
+            width: 85%;
+            text-align: center;
+            margin-bottom: 25px;
+            outline: none;
+            font-family: 'Tourney', sans-serif;
+            transition: 0.3s;
+        }
+        .login-box input[type="text"]:focus {
+            border-color: #33ff33;
+            box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.0.0/pixi.min.js"></script>
+</head>
+<body>
+
+   <div id="inicio-screen" style="background: url('./assets/fondo.png') no-repeat center center fixed; background-size: cover; background-color:#030508">
+        <div class="login-box">
+            <h1>INGRESE SU USERNAME</h1>
+            <input type="text" id="username-input" placeholder="BIOLOGO_123" maxlength="15" autocomplete="off">
+            <br>
+            
+            <button id="btn-comenzar-juego" class="pixel-btn" style="padding: 12px 35px; font-size: 16px;">JUGAR</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        
+        <div id="ui-overlay">
+            <div class="caos-container">
+                <span class="caos-label">NIVEL DE INFECCIÓN:</span>
+                <div class="caos-bar-max">
+                    <div id="caos-bar-fill"></div>
+                </div>
+                <div id="cronometro">00:00</div>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="overlay-screen" style="display: none;">
+            <div class="modal-content">
+                <h1>PERDISTE</h1>
+                <p>El virus consumió por completo la placa de Petri!</p>
+                <button id="btn-restart" class="pixel-btn">Intentar de Nuevo</button>
+                <button id="btn-ranking-loss" class="pixel-btn btn-ver-ranking">Ver Ranking</button>
+            </div>
+        </div>
+
+        <div id="victory-screen" class="overlay-screen victory" style="display: none;">
+            <div class="modal-content victory-border">
+                <h1>¡SOBREVIVISTE!</h1>
+                <p>Lograste contener la infección y salvar la muestra biológica.</p>
+                <button id="btn-restart-victory" class="pixel-btn victory-btn">Jugar de Nuevo</button>
+               <button id="btn-ranking-win" class="pixel-btn victory-btn btn-ver-ranking">Ver Ranking</button>
+            </div>
+        </div>
+
+        
+        <div id="ranking-screen" style="display: none;"></div>
+
+    </div>
+
+    
+    <script>
+        document.getElementById('btn-ranking-win').addEventListener('click', () => {
+            window.location.href = "ranking.html"});
+
+        document.getElementById('btn-ranking-loss').addEventListener('click', () => {
+            window.location.href = "ranking.html"});
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('username-input').focus();
+        });
+
+        document.getElementById('btn-comenzar-juego').addEventListener('click', () => {
+            const nombreInput = document.getElementById('username-input').value.trim();
+            if (nombreInput === "") {
+                alert("Por favor, ingrese un nombre de usuario.");
+                return;
+            }
+            
+            localStorage.setItem('nombreUsuarioActual', nombreInput);
+            window.nombreUsuario = nombreInput;
+            
+            const boton = document.getElementById('btn-comenzar-juego');
+            boton.innerText = "PREPARANDO MUESTRA...";
+            boton.style.background = "#555";
+            boton.style.borderColor = "#555";
+            boton.disabled = true; 
+
+            console.log("Credenciales aceptadas. Preparando laboratorio...");
+
+           
+            setTimeout(() => {
+                // Ocultamos el login
+                document.getElementById('inicio-screen').style.display = 'none';
+                
+               
+                if (window.motorJuego) {
+                    window.motorJuego.juegoPausadoPorLogin = false;
+                    console.log("¡Simulación biológica iniciada oficialmente!");
+                }
+            }, 2000);
+        });
+    </script>
+
+    
+    <script type="module" src="./clases/gameObject.js"></script>
+    <script type="module" src="./clases/bacteria.js"></script>
+    <script type="module" src="./clases/virus.js"></script>
+    <script type="module" src="./clases/juego.js"></script>
+    <script type="module" src="./clases/torre.js"></script>
+    
+</body>
+</html>
