@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icono.jpeg" type="image/x-icon">
+    <title>Vyrus - Home</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* Usamos el mismo fondo para mantener la estética */
+            background: url('./assets/fondo.png') no-repeat center center fixed;
+            background-color: #030508;
+            background-size: cover;
+            font-family: 'Tourney', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Capa oscura para que resalte el menú */
+        .overlay-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 400vw;
+            height: 400vh;
+            z-index: 1;
+        }
+
+        
+        .home-box {
+            position: relative;
+            z-index: 2; 
+            background: rgba(3, 5, 8, 0.75);
+            border: 3px solid #33ff33;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(51, 255, 51, 0.3);
+        }
+
+       
+        .game-logo {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 20px;
+            
+            filter: drop-shadow(0 0 8px rgba(51, 255, 51, 0.6));
+        }
+
+        /* Botón de Play con tu estilo Pixel original */
+        .btn-play {
+            background: rgba(64, 226, 255, 0.75);
+            border: 3px solid #9233ff;
+            color: #33ff33;
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 35px;
+            width: 80%;
+            font-family: 'Tourney', sans-serif;
+        }
+
+        .btn-play:hover {
+            background: #33ff33;
+            color: #000;
+            box-shadow: 0 0 15px #33ff33;
+            transform: scale(1.03);
+        }
+
+        
+        .mini-ranking-container {
+            border-top: 1px dashed rgba(51, 255, 51, 0.4);
+            padding-top: 20px;
+        }
+
+        .mini-ranking-container h3 {
+            color: #33ff33;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .tabla-body-mini {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .fila-mini {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            padding: 2px 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-bg"></div>
+
+    <div class="home-box">
+        
+        <h1 class="titulo-vyrus" style="font-family:Tourney; color:#33ff33" >VYRUS</h1>
+        
+        <br>
+        
+        
+        <button class="btn-play" id="btn-play-game">PLAY</button>
+
+        
+        <div class="mini-ranking-container">
+            <h3>TOP 3 BIÓLOGOS</h3>
+            <div id="mini-ranking-body" class="tabla-body-mini">
+               
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.getElementById('btn-play-game').addEventListener('click', () => {
+            window.location.href = "index.html";
+        });
+
+        
+        const tablaMini = document.getElementById('mini-ranking-body');
+        const datosRanking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
+        
+        
+        const estilosPodio = [
+            { prefijo: '1st', color: '#FFFF00' }, // Oro
+            { prefijo: '2nd', color: '#FF9900' }, // Plata
+            { prefijo: '3rd', color: '#ff6600' }  // Bronce
+        ];
+
+        tablaMini.innerHTML = '';
+
+        if (datosRanking.length === 0) {
+            tablaMini.innerHTML = `<div style="color: #666; font-size: 14px;">SIN REGISTROS DE SIMULACIÓN</div>`;
+        } else {
+            // Tomamos solo los primeros 3 puestos del array
+            const top3 = datosRanking.slice(0, 3);
+            
+            top3.forEach((puesto, index) => {
+                const divFila = document.createElement('div');
+                divFila.className = 'fila-mini';
+                divFila.style.color = estilosPodio[index].color;
+
+                divFila.innerHTML = `
+                    <span><strong>${estilosPodio[index].prefijo}</strong> &nbsp; ${(puesto.nombre || 'ANÓNIMO').toUpperCase()}</span>
+                    <span>${puesto.puntaje || 0} PTS</span>
+                `;
+                tablaMini.appendChild(divFila);
+            });
+        }
+    </script>
+</body>
+</html>
