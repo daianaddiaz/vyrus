@@ -13,11 +13,12 @@ async function iniciarJuego() {
 
 async function cargarAssets() {
     console.log("Cargando Assets...");
+    const repoPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1); //funcionamiento del github Pages
 
     try {
-        PIXI.Assets.add({alias: 'bacteriaSana', src: "../assets/bacteriaSana.json"});
-        PIXI.Assets.add({alias: 'fondo', src: "../assets/placa_petri.png"});
-        PIXI.Assets.add({alias: 'vyrus', src: "../assets/vyrus.json"})
+        PIXI.Assets.add({alias: 'bacteriaSana', src: `${repoPath}assets/bacteriaSana.json`});
+        PIXI.Assets.add({alias: 'fondo', src: `${repoPath}assets/placa_petri.png`});
+        PIXI.Assets.add({alias: 'vyrus', src:  `${repoPath}assets/vyrus.json`})
         
         const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana', 'vyrus']);
         recursos.bacteriaSana.textureSource.scaleMode = 'nearest';
