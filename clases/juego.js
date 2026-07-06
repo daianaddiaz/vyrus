@@ -1,4 +1,4 @@
-import GameObject from '../gameObject.js';
+import GameObject from './gameObject.js';
 import EntidadJuego from './bacteria.js';
 
 let motor; 
@@ -15,8 +15,8 @@ async function cargarAssets() {
     console.log("Cargando Assets...");
 
     try {
-        PIXI.Assets.add({alias: 'bacteriaSana', src: "../assets/bacteriaSana.json"});
-        PIXI.Assets.add({alias: 'fondo', src: "../assets/placa_petri.png"});
+        PIXI.Assets.add({alias: 'bacteriaSana', src: "assets/bacteriaSana.json"});
+        PIXI.Assets.add({alias: 'fondo', src: "assets/placa_petri.png"});
         
         const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana']);
         recursos.bacteriaSana.textureSource.scaleMode = 'nearest';
