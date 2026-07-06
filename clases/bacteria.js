@@ -79,7 +79,7 @@ export default class EntidadJuego {
     const centroX = this.motor.app.screen.width / 2;
     const centroY = this.motor.app.screen.height / 2;
     const radioX = this.motor.app.screen.width * 0.40; 
-    const radioY = this.motor.app.screen.height * 0.40;
+    const radioY = this.motor.app.screen.height * 0.35;
 
     const dx = nuevaX - centroX;
     const dy = nuevaY - centroY;

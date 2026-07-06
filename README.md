@@ -16,7 +16,7 @@ A través del despliegue táctico de **torres de sanidad** y la contención de l
 ## 📄 Game Design Document (GDD)
 
 Podés consultar el documento de diseño de niveles, mecánicas y balance biológico detallado del juego acá:  
-➡️ *[Próximamente / Agregar link del GDD de Vyrus acá]*
+➡️ *[Próximamente]*
 
 ---
 

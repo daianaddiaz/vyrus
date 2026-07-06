@@ -17,7 +17,7 @@ export default class Virus {
         this.esAlfa = esAlfa;
         if (this.esAlfa) {
             this.velocidadMaxima = 3.5; 
-            this.colorTinte = 0xFFFFFF;  
+            this.colorTinte = 0xB130FC;  
         } else {
             this.velocidadMaxima = 1.8; 
             this.colorTinte = 0xFF5555;  
@@ -38,7 +38,7 @@ export default class Virus {
             anim.loop = true;
             anim.animationSpeed = 0.12; 
             anim.anchor.set(0.5, 1);
-            anim.scale.set(this.esAlfa ? 2 : 2); 
+            anim.scale.set(this.esAlfa ? 2.5 : 2); 
             anim.tint = this.colorTinte;
             anim.visible = false;
             this.spritesAnimados[key] = anim;
