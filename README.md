@@ -22,8 +22,8 @@ Podés consultar el documento de diseño de niveles, mecánicas y balance bioló
 
 ## 🛠️ Tecnologías utilizadas
 
-* **JavaScript (ES6+)** - Lógica modular, sistemas de colisiones y motor físico[cite: 16].
-* **PIXI.js (v8)** - Renderizado gráfico de alto rendimiento a 60 FPS mediante WebGL[cite: 16].
+* **JavaScript (ES6+)** - Lógica modular, sistemas de colisiones y motor físico
+* **PIXI.js (v8)** - Renderizado gráfico de alto rendimiento a 60 FPS mediante WebGL
 * **Adobe Illustrator / Aseprite** - Diseño de interfaz pixel-art, fuentes tipográficas y hojas de sprites animados.
 * **LocalStorage** - Sistema de persistencia atómica para el ranking de puntajes locales.
 
