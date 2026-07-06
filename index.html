@@ -20,25 +20,35 @@
                     <div id="caos-bar-fill"></div>
                 </div>
                 <div id="cronometro">00:00</div>
+
+
+</div>
             </div>
 
-            <div class="botonera">
-                
-                <button id="btn-torre" class="btn-estructura" data-tipo="torre">
-                    <span class="btn-icon">💉</span> <span class="btn-text">Vacuna</span>
-                    <div id="cooldown-torre" class="cooldown-overlay"></div>
-                </button>
-                
-            </div>
+    <div id="game-over-screen" class="overlay-screen" style="display: none;">
+        <div class="modal-content">
+            <h1>PERDISTE</h1>
+            <p>El virus consumió por completo la placa de Petri!</p>
+        <button id="btn-restart" class="pixel-btn">Intentar de Nuevo</button>
+    </div>
+    </div>
 
-        </div>
+    <div id="victory-screen" class="overlay-screen victory" style="display: none;">
+    <div class="modal-content victory-border">
+        <h1>¡SOBREVIVISTE!</h1>
+        <p>Lograste contener la infección y salvar la muestra biológica.</p>
+        <button id="btn-restart-victory" class="pixel-btn victory-btn">Jugar de Nuevo</button>
+    </div>
+    </div>
 
-        </div>
+
+</div>
 
     <script type="module" src="./clases/gameObject.js"></script>
     <script type="module" src="./clases/bacteria.js"></script>
+    <script type="module" src="./clases/virus.js"></script>
     <script type="module" src="./clases/juego.js"></script>
-    <script type="module" src="./clases/torres.js"></script>
+    <script type="module" src="./clases/torre.js"></script>
     
 </body>
 </html>

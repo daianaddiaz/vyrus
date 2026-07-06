@@ -28,17 +28,13 @@ body {
 
 #ui-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    z-index: 10;
+    top: 20px;
+    left: 20px;
+    z-index: 10; /* Por encima del canvas de PIXI */
+    font-family: 'Courier New', Courier, monospace; /* Estilo laboratorio */
+    color: white;
 }
+
 
 
 .caos-container, .botonera {
@@ -57,19 +53,20 @@ body {
 }
 
 .caos-bar-max {
-    width: 200px;
-    height: 20px;
-    background: #333;
+    width: 150px;
+    height: 40px;
+    background-color: #222;
+    border: 2px solid #555;
     border-radius: 4px;
     overflow: hidden;
-    border: 2px solid #555;
+    margin-top: 5px;
 }
 
 #caos-bar-fill {
     width: 0%; 
     height: 100%;
-    background: linear-gradient(90deg, #ff4e50, #f9d423);
-    transition: width 0.3s ease;
+    background-color: #ff3333; 
+    transition: width 0.2s ease-out;
 }
 
 
@@ -109,4 +106,128 @@ body {
     height: 0%; 
     background: rgba(0, 0, 0, 0.7);
     transition: height 0s linear;
+}
+
+.overlay-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(139, 0, 0, 0.65); /* Rojo oscuro transparente */
+    z-index: 100; /* Por encima de todo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+
+.modal-content {
+    background-color: #111;
+    border: 4px solid #ff3333;
+    padding: 30px 50px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.modal-content h1 {
+    font-size: 3rem;
+    color: #ff3333;
+    margin: 0 0 10px 0;
+    letter-spacing: 2px;
+}
+
+.pixel-btn {
+    background-color: #ff3333;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background 0.2s;
+}
+
+.pixel-btn:hover {
+    background-color: #b30000;
+}
+
+.overlay-screen.victory {
+    background-color: rgba(0, 100, 0, 0.65);
+}
+
+.modal-content.victory-border {
+    border: 4px solid #33ff33;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.modal-content h1 {
+    color:#ff3333; 
+}
+
+.modalv-content h1 {
+    color: #33ff33
+}
+
+.pixel-btn.victory-btn {
+    background-color: #33ff33;
+    color: black;
+}
+
+.pixel-btn.victory-btn:hover {
+    background-color: #00cc00;
+}
+
+
+#torre-control-panel {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+}
+
+
+.torre-slot {
+    width: 120px;
+    height: 120px;
+    background-color: #111;
+    border: 3px solid #33ff33;
+    border-radius: 8px;
+    position: relative;
+    cursor: grab;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.3);
+}
+
+.torre-slot:active {
+    cursor: grabbing;
+}
+
+
+#torre-cooldown-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    transition: height 0.1s linear; 
+}
+
+
+.torre-hotkey {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 0.8rem;
+    color: #33ff33;
+    font-family: monospace;
+    font-weight: bold;
 }

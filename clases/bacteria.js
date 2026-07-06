@@ -1,5 +1,5 @@
 export default class EntidadJuego {
-  constructor(x, y, motor, spritesheet, animacionInicial) {
+  constructor(x, y, motor, spritesheet, animacionInicial, esCurada = false) {
     this.motor = motor;
     this.container = new PIXI.Container();
     
@@ -7,9 +7,18 @@ export default class EntidadJuego {
     this.posicion = { x: x, y: y };
     this.velocidad = { x: 0, y: 0 };
     this.aceleracion = { x: 0, y: 0 };
-    this.velocidadMaxima = 0.8; // Velocidad baja para las bacterias
-    this.radio = 25;
+    this.velocidadMaxima = 0.8; 
+    this.radio = 15;
     this.isDead = false;
+    this.isBacteria = true;
+    this.modoZombieActivo = false; 
+
+    // 🔥 LÓGICA DE INMUNIDAD Y VIDA LIMITADA PARA CURADAS
+    this.esCurada = esCurada; 
+    if (this.esCurada) {
+      this.tiempoVidaRestante = 5 * 60; // 5 segundos exactos a 60 FPS
+      this.container.alpha = 0.8; // Un toque sutil de transparencia para identificarlas
+    }
 
     // IA DE MOVIMIENTO ALEATORIO
     this.tiempoParaCambiar = 0;
@@ -43,9 +52,7 @@ export default class EntidadJuego {
     this.spritesAnimados[cual].visible = true;
   }
 
- aplicarFisica() {
-
-    // Sumar aceleración a la velocidad y aplicar fricción
+  aplicarFisica() {
     this.velocidad.x += this.aceleracion.x;
     this.velocidad.y += this.aceleracion.y;
     this.aceleracion.x = 0;
@@ -61,13 +68,11 @@ export default class EntidadJuego {
       this.velocidad.y *= factor;
     }
 
-    //Posición futura
     let nuevaX = this.posicion.x + this.velocidad.x;
     let nuevaY = this.posicion.y + this.velocidad.y;
 
     const centroX = this.motor.app.screen.width / 2;
     const centroY = this.motor.app.screen.height / 2;
-
     const radioX = this.motor.app.screen.width * 0.40; 
     const radioY = this.motor.app.screen.height * 0.40;
 
@@ -75,78 +80,55 @@ export default class EntidadJuego {
     const dy = nuevaY - centroY;
     const adentroDelOvalo = (dx ** 2) / (radioX ** 2) + (dy ** 2) / (radioY ** 2);
 
-    //Si toca el borde del óvalo...
-
     if (adentroDelOvalo > 1) {
-      
-      // Calculamos la dirección hacia el centro 
-      // Esto nos dice con precisión matemática hacia dónde empuja la pared ovalada
-
       const nx = dx / (radioX * radioX);
       const ny = dy / (radioY * radioY);
       const longitudNormal = Math.sqrt(nx * nx + ny * ny);
       
-      // Normalizamos el vector de la pared
       const normalX = nx / longitudNormal;
       const normalY = ny / longitudNormal;
 
-      //Reflejamos el vector de velocidad - Formula de Rebote // DIOS
       const productoPunto = this.velocidad.x * normalX + this.velocidad.y * normalY;
       
-      // Solo rebotamos si se está moviendo hacia AFUERA
-
       if (productoPunto > 0) {
         this.velocidad.x -= 2 * productoPunto * normalX;
         this.velocidad.y -= 2 * productoPunto * normalY;
       }
 
-      //Forzamos una aceleración directa hacia el centro de la placa 
-    
       const anguloAlCentro = Math.atan2(centroY - this.posicion.y, centroX - this.posicion.x);
       this.aceleracion.x = Math.cos(anguloAlCentro) * 0.4;
       this.aceleracion.y = Math.sin(anguloAlCentro) * 0.4;
 
-    
       this.tiempoParaCambiar = Math.random() * 60 + 60; 
 
-      
       nuevaX = centroX + (dx / Math.sqrt(adentroDelOvalo)) * 0.99;
       nuevaY = centroY + (dy / Math.sqrt(adentroDelOvalo)) * 0.99;
     }
 
-   
     this.posicion.x = nuevaX;
     this.posicion.y = nuevaY;
   }
 
   controlarAnimacionPorVelocidad() {
-    // Si se mueve significativamente a la derecha
     if (this.velocidad.x > 0.01) {
       this.cambiarAnimacion('derecha');
-    } 
-    // Si se mueve significativamente a la izquierda
-    else if (this.velocidad.x < -0.01) {
+    } else if (this.velocidad.x < -0.01) {
       this.cambiarAnimacion('izquierda');
-    } 
-    // Si está casi quieta
-    else if (Math.abs(this.velocidad.x) < 0.01 && Math.abs(this.velocidad.y) < 0.1) {
+    } else if (Math.abs(this.velocidad.x) < 0.01 && Math.abs(this.velocidad.y) < 0.1) {
       this.cambiarAnimacion('idle');
     }
   }
 
   iaPatrullaje() {
     this.tiempoParaCambiar--; 
-    // Decide su propio rumbo cada cierta cantidad de frames
     if (this.tiempoParaCambiar <= 0) {
-      this.tiempoParaCambiar = Math.random() * 120 + 60; // Entre 1 y 3 segundos
+      this.tiempoParaCambiar = Math.random() * 120 + 60;
       
       if (Math.random() > 0.3) {
-        // Direccion Aleatoria
         const angulo = Math.random() * Math.PI * 2;
         this.aceleracion.x = Math.cos(angulo) * 0.3;
         this.aceleracion.y = Math.sin(angulo) * 0.3;
       } else {
-        // Se queda quieta un rato
         this.aceleracion.x = 0;
         this.aceleracion.y = 0;
       }
@@ -154,11 +136,50 @@ export default class EntidadJuego {
   }
 
   update() {
+    // 🔥 CONTROL DE TIEMPO DE VIDA PARA BACTERIAS CURADAS
+    if (this.esCurada) {
+        this.tiempoVidaRestante--;
+        
+        // Efecto parpadeo en el último segundo para avisar que desaparece
+        if (this.tiempoVidaRestante < 60 && this.tiempoVidaRestante % 10 < 5) {
+            this.container.visible = false;
+        } else {
+            this.container.visible = true;
+        }
+
+        if (this.tiempoVidaRestante <= 0) {
+            this.isDead = true;
+            if (this.container) {
+                this.container.destroy({ children: true });
+            }
+            return; // Interrumpimos el update
+        }
+    }
+
     this.iaPatrullaje();
     this.aplicarFisica();
     this.controlarAnimacionPorVelocidad();
 
-    // Render en pantalla
+    if (this.modoZombieActivo && !this.isDead) {
+        this.isDead = true;
+        if (this.container) {
+            this.container.destroy({ children: true });
+        }
+
+        const primerVirus = this.motor.gameObjects.find(o => o.isVirus);
+        if (primerVirus) {
+            const VirusClase = primerVirus.constructor;
+            new VirusClase(
+                this.posicion.x, 
+                this.posicion.y, 
+                this.motor, 
+                primerVirus.spritesheet, 
+                false
+            );
+        }
+        return; 
+    }
+
     this.container.x = this.posicion.x;
     this.container.y = this.posicion.y;
     this.container.zIndex = Math.floor(this.posicion.y);
