@@ -17,8 +17,9 @@ async function cargarAssets() {
     try {
         PIXI.Assets.add({alias: 'bacteriaSana', src: "../assets/bacteriaSana.json"});
         PIXI.Assets.add({alias: 'fondo', src: "../assets/placa_petri.png"});
+        PIXI.Assets.add({alias: 'vyrus', src: "../assets/vyrus.json"})
         
-        const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana']);
+        const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana', 'vyrus']);
         recursos.bacteriaSana.textureSource.scaleMode = 'nearest';
         console.log("¡Assets cargados!");
 
