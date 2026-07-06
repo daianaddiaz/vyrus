@@ -214,13 +214,19 @@ export default class GameObject {
 
   desatarVictoria() {
     this.juegoTerminado = true;
-    this.app.ticker.stop()
+    this.app.ticker.stop();
+
+    if (typeof window.finalizarYCalcularRanking === 'function') {
+        window.finalizarYCalcularRanking();
+    } else {
+        // Alternativa por si no se exportó globalmente
+        console.log("¡Victoria! Registrando el fin de la partida.");
+    }
 
     const screenVictory = document.getElementById('victory-screen');
     if (screenVictory) {
       screenVictory.style.display = 'flex';
     }
-    
     
     const btnRestartVictory = document.getElementById('btn-restart-victory');
     if (btnRestartVictory && !btnRestartVictory.dataset.listener) {

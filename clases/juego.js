@@ -250,7 +250,7 @@ function verificarFinDePartida() {
         motor.juegoTerminado = true;
         console.log("Partida finalizada. Calculando resultados de " + nombreUsuario);
         finalizarYCalcularRanking();
-    } // <-- ¡ESTA LLAVE FALTA EN TU ARCHIVO ORIGINAL!
+    } 
 }
 
 function finalizarYCalcularRanking() {
@@ -266,7 +266,7 @@ function finalizarYCalcularRanking() {
     let ranking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
     ranking.push({ nombre: nombreUsuario, puntaje: puntajeFinal, fecha: new Date().toLocaleDateString() });
     ranking.sort((a, b) => b.puntaje - a.puntaje);
-    ranking = ranking.slice(0, 5);
+    ranking = ranking.slice(0, 5); // Almacena el top 5
     localStorage.setItem('rankingBacterias', JSON.stringify(ranking));
     
     if (vivas.length === 0) {
@@ -275,3 +275,5 @@ function finalizarYCalcularRanking() {
         document.getElementById('victory-screen').style.display = 'flex';
     }
 }
+    
+window.finalizarYCalcularRanking = finalizarYCalcularRanking;
