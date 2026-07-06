@@ -1,81 +1,63 @@
+import GameObject from '../gameObject.js';
+import EntidadJuego from './bacteria.js';
 
-let app;
-
-
+let motor; 
 let texturaFondo;
-let animacionCelularSanaCeleste = [];
-let animacionCelularVerde = [];
-let animacionVirus = [];
-let animacionTorre = [];
-let texturaMuro;
-
 
 async function iniciarJuego() {
+    motor = new GameObject();
+    await motor.init();
     
-    app = new PIXI.Application();
-    
-    await app.init({
-        resizeTo: window,           
-        backgroundColor: 197920,  
-        antialias: true,           
-        resolution: window.devicePixelRatio || 1,  
-    });
-
-    
-    document.getElementById('game-container').appendChild(app.canvas);
-
-    console.log("¡Pixi.js inicializado a pantalla completa!");
-
-   
-    window.addEventListener('resize', () => {
-       
-        console.log(`Nueva resolución: ${app.screen.width}x${app.screen.height}`);
-    });
-
-   
     await cargarAssets();
 }
 
 async function cargarAssets() {
-   
     console.log("Cargando Assets...");
 
     try {
-        PIXI.Assets.add({alias: 'torreEstatica', src:"../assets/maquina de curacion.json"});
-        PIXI.Assets.add({alias: 'torreCurando', src:"../assets/maquina de curacion - heal.json"});
-        PIXI.Assets.add({alias: 'torreCooldown', src:"../assets/maquina de curacion cooldown.json"});
-        PIXI.Assets.add({alias: 'bacteriaSana', src:"../assets/bacteriaSana.json"});
-        PIXI.Assets.add({alias: 'fondo', src:"../assets/placa_petri.png"});
+        PIXI.Assets.add({alias: 'bacteriaSana', src: "../assets/bacteriaSana.json"});
+        PIXI.Assets.add({alias: 'fondo', src: "../assets/placa_petri.png"});
         
+        const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana']);
+        recursos.bacteriaSana.textureSource.scaleMode = 'nearest';
+        console.log("¡Assets cargados!");
 
-        const recursos = await PIXI.Assets.load(['fondo']);
-
-        texturaFondo = recursos.fondo 
-
+        texturaFondo = recursos.fondo;
         const fondoSprite = new PIXI.Sprite(texturaFondo);
         fondoSprite.anchor.set(0.5);
-        fondoSprite.x = app.screen.width / 2;
-        fondoSprite.y = app.screen.height / 2;
+        fondoSprite.x = motor.app.screen.width / 2;
+        fondoSprite.y = motor.app.screen.height / 2;
+        motor.app.stage.addChildAt(fondoSprite, 0); 
 
 
+        const cantidadBacterias = 150;
+        const centroX = motor.app.screen.width / 2;
+        const centroY = motor.app.screen.height / 2;
+        
+        const radioSpawnX = motor.app.screen.width * 0.35;
+        const radioSpawnY = motor.app.screen.height * 0.35;
 
-        app.stage.addChild(fondoSprite);
+        for (let i = 0; i < cantidadBacterias; i++) {
+            const angulo = Math.random() * Math.PI * 2;
+            const distancia = Math.random(); 
 
-        const nombreAnimCelula = Object.keys(recursos.spritesheetCelulas.animations)[0];
-        animacionCelularSana = recursos.bacteriaSana.animations[nombreAnimCelula];
+            const randomX = centroX + Math.cos(angulo) * (radioSpawnX * distancia);
+            const randomY = centroY + Math.sin(angulo) * (radioSpawnY * distancia);
 
-        const nombreAnimVirus = Object.keys(recursos.spritesheetVirus.animations)[0];
-        animacionVirus = recursos.spritesheetVirus.animations[nombreAnimVirus];
+            // Creamos las bacterias distribuidas
+            new EntidadJuego(randomX, randomY, motor, recursos.bacteriaSana, 'idle');
+        } 
+
+        console.log("Objetos en el contenedor general:", motor.gameObjects);
 
         window.addEventListener('resize', () => {
-            fondoSprite.x = app.screen.width / 2;
-            fondoSprite.y = app.screen.height / 2;
+            fondoSprite.x = motor.app.screen.width / 2;
+            fondoSprite.y = motor.app.screen.height / 2;
         });
 
-    }catch (error) {
-        console.error("Error cargando los assets del juego:", error);
+    } catch (error) {
+        console.error("Error en la carga o inicialización:", error);
     }
 }
 
-// Arrancar el juego cuando cargue la página
-window.onload = iniciarJuego;
+iniciarJuego();
