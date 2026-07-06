@@ -231,3 +231,37 @@ body {
     font-family: monospace;
     font-weight: bold;
 }
+
+
+.titulo-vyrus {
+    font-family: 'Tourney', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #fff;
+    margin: 0 0 10px 0;
+    animation: pulsoNeon 3s ease-in-out infinite; 
+}
+
+@keyframes pulsoNeon {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 4px #fff,
+            0 0 11px #fff,
+            0 0 19px #33ff33,   /* Verde */
+            0 0 40px #33ff33,   /* Verde */
+            0 0 80px #33ff33,   /* Verde */
+            0 0 90px #33ff33;   /* Verde */
+    }
+    50% {
+        transform: scale(1.04); /* Agranda sutilmente el texto */
+        text-shadow: 
+            0 0 4px #fff,
+            0 0 11px #fff,
+            0 0 19px #40e2ff,   /* Celeste */
+            0 0 40px #40e2ff,   /* Celeste */
+            0 0 80px #40e2ff,   /* Celeste */
+            0 0 90px #40e2ff;   /* Celeste */
+    }
+}
