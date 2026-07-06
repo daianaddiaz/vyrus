@@ -24,8 +24,10 @@ Podés consultar el documento de diseño de niveles, mecánicas y balance bioló
 
 * **JavaScript (ES6+)** - Lógica modular, sistemas de colisiones y motor físico
 * **PIXI.js (v8)** - Renderizado gráfico de alto rendimiento a 60 FPS mediante WebGL
-* **Adobe Illustrator / Aseprite** - Diseño de interfaz pixel-art, fuentes tipográficas y hojas de sprites animados.
-* **LocalStorage** - Sistema de persistencia atómica para el ranking de puntajes locales.
+* **Adobe Illustrator/ Canva / Piskel** - Diseño de interfaz pixel-art, patrones, y hojas de sprites animados.
+* **LocalStorage** - Sistema de guardado local de datos para el ranking
+* **Fuente** - Google Fonts.
+
 
 ---
 
