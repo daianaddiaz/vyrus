@@ -51,7 +51,7 @@ async function cargarAssets() {
         motor.app.stage.addChildAt(fondoSprite, 0); 
 
         // Spawn de Bacterias (100 iniciales en la placa)
-        const cantidadBacterias = 300;
+        const cantidadBacterias = 500;
         const centroX = motor.app.screen.width / 2;
         const centroY = motor.app.screen.height / 2;
         const radioSpawnX = motor.app.screen.width * 0.35;
