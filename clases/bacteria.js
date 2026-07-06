@@ -22,7 +22,7 @@ export default class EntidadJuego {
     this.esCurada = esCurada; 
     if (this.esCurada) {
       this.tiempoVidaRestante = 5 * 60; // 5 segundos exactos a 60 FPS
-      this.container.alpha = 0.8; // Un toque sutil de transparencia para identificarlas
+      this.container.alpha = 1.0; // Un toque sutil de transparencia para identificarlas
     }
 
     // MOVIMIENTO ALEATORIO
@@ -140,47 +140,45 @@ export default class EntidadJuego {
     }
   }
 
-  update() {
-
+update() {
     if (this.esCurada) {
-    this.tiempoVidaRestante--;
-    
-    // Efecto parpadeo opcional en el último segundo para avisar que se le va el escudo
-
-    if (this.tiempoVidaRestante < 60 && this.tiempoVidaRestante % 10 < 5) {
-        this.container.alpha = 0.3; 
-    } else {
-        this.container.alpha = 1.0;
-    }
-
-    if (this.tiempoVidaRestante <= 0) {
-        console.log("¡Escudo agotado! Reinvocando como bacteria común contagiable.");
+        this.tiempoVidaRestante--;
         
-        const recursoSana = PIXI.Assets.get('bacteriaSana'); 
-        const BacteriaClase = this.constructor; 
-
-        new BacteriaClase(
-            this.posicion.x,
-            this.posicion.y,
-            this.motor,
-            recursoSana,
-            'idle', 
-            false // Nace expuesta al contagio
-        );
-
-        this.isDead = true;
-        if (this.container) {
-            this.container.destroy({ children: true });
+        // Efecto parpadeo en el último segundo para avisar que se le va el escudo
+        if (this.tiempoVidaRestante < 60 && this.tiempoVidaRestante % 10 < 5) {
+            this.container.alpha = 0.4; 
+        } else {
+            this.container.alpha = 1.0;
         }
-        return;
+
+        if (this.tiempoVidaRestante <= 0) {
+            console.log("¡Escudo agotado! Reinvocando como bacteria común contagiable.");
+            
+            const recursoSana = PIXI.Assets.get('bacteriaSana'); // Cambia a la textura original
+            const BacteriaClase = this.constructor; 
+
+            new BacteriaClase(
+                this.posicion.x,
+                this.posicion.y,
+                this.motor,
+                recursoSana,
+                this.animacionActual, // Mantiene la pose que tenía al cambiar
+                false // Nace expuesta al contagio
+            );
+
+            this.isDead = true;
+            if (this.container) {
+                this.container.destroy({ children: true });
+            }
+            return;
+        }
     }
-}
 
     this.iaPatrullaje();
     this.aplicarFisica();
     this.controlarAnimacionPorVelocidad();
 
-   if (this.modoZombieActivo && !this.isDead) {
+    if (this.modoZombieActivo && !this.isDead) {
         this.isDead = true;
         if (this.container) {
             this.container.destroy({ children: true });
@@ -203,5 +201,5 @@ export default class EntidadJuego {
     this.container.x = this.posicion.x;
     this.container.y = this.posicion.y;
     this.container.zIndex = Math.floor(this.posicion.y);
-  }
+}
 }

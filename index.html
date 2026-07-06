@@ -92,7 +92,7 @@
                 <h1>PERDISTE</h1>
                 <p>El virus consumió por completo la placa de Petri!</p>
                 <button id="btn-restart" class="pixel-btn">Intentar de Nuevo</button>
-                <a href="ranking.html" style="text-decoration: none;"><button id="btn-ranking-loss" class="pixel-btn btn-ver-ranking">Ver Ranking</button></a>
+                <button id="btn-ranking-loss" class="pixel-btn btn-ver-ranking">Ver Ranking</button>
             </div>
         </div>
 
@@ -101,7 +101,7 @@
                 <h1>¡SOBREVIVISTE!</h1>
                 <p>Lograste contener la infección y salvar la muestra biológica.</p>
                 <button id="btn-restart-victory" class="pixel-btn victory-btn">Jugar de Nuevo</button>
-               <a href="ranking.html" style="text-decoration: none;"><button id="btn-ranking-win" class="pixel-btn victory-btn btn-ver-ranking">Ver Ranking</button></a> 
+               <button id="btn-ranking-win" class="pixel-btn victory-btn btn-ver-ranking">Ver Ranking</button>
             </div>
         </div>
 
@@ -112,7 +112,12 @@
 
     
     <script>
-        
+        document.getElementById('btn-ranking-win').addEventListener('click', () => {
+            window.location.href = "ranking.html"});
+
+        document.getElementById('btn-ranking-loss').addEventListener('click', () => {
+            window.location.href = "ranking.html"});
+
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('username-input').focus();
         });
@@ -124,14 +129,28 @@
                 return;
             }
             
-           
             localStorage.setItem('nombreUsuarioActual', nombreInput);
-            
-            
             window.nombreUsuario = nombreInput;
             
+            const boton = document.getElementById('btn-comenzar-juego');
+            boton.innerText = "PREPARANDO MUESTRA...";
+            boton.style.background = "#555";
+            boton.style.borderColor = "#555";
+            boton.disabled = true; 
+
+            console.log("Credenciales aceptadas. Preparando laboratorio...");
+
            
-            document.getElementById('inicio-screen').style.display = 'none';
+            setTimeout(() => {
+                // Ocultamos el login
+                document.getElementById('inicio-screen').style.display = 'none';
+                
+               
+                if (window.motorJuego) {
+                    window.motorJuego.juegoPausadoPorLogin = false;
+                    console.log("¡Simulación biológica iniciada oficialmente!");
+                }
+            }, 2000);
         });
     </script>
 

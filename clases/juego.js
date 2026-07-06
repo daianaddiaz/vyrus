@@ -28,11 +28,13 @@ async function cargarAssets() {
         PIXI.Assets.add({alias: 'fondo', src: `${repoPath}assets/placa_petri.png`});
         PIXI.Assets.add({alias: 'vyrus', src: `${repoPath}assets/vyrus.json`});
         PIXI.Assets.add({alias: 'torreAsset', src: `${repoPath}assets/torre.json`});
+        PIXI.Assets.add({alias: 'bacteriaCurada', src: `${repoPath}assets/bacteriaCurada.json`});
         
-        const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana', 'vyrus', 'torreAsset']);
+        const recursos = await PIXI.Assets.load(['fondo', 'bacteriaSana', 'vyrus', 'torreAsset', 'bacteriaCurada']);
         recursos.bacteriaSana.textureSource.scaleMode = 'nearest';
         recursos.vyrus.textureSource.scaleMode = 'nearest';
-        recursos.torreAsset.textureSource.scaleMode = 'nearest'; // Pixel art limpio
+        recursos.torreAsset.textureSource.scaleMode = 'nearest'; 
+        recursos.bacteriaCurada.textureSource.scaleMode = 'nearest';
         
         console.log("¡Assets cargados con éxito!");
 
@@ -237,7 +239,16 @@ function crearBotonTorreUI() {
     motor.app.stage.on('pointerupoutside', soltarTorre);
 }
 
-iniciarJuego(); 
+const btnComenzar = document.getElementById('btn-comenzar'); 
+if (btnComenzar) {
+    btnComenzar.addEventListener('click', () => {
+        
+        iniciarJuego();
+    });
+} else {
+    
+    iniciarJuego();
+} 
 
 
 function verificarFinDePartida() {
@@ -253,7 +264,20 @@ function verificarFinDePartida() {
     } 
 }
 
+// Variable bandera fuera de la función para que persista en el módulo
+let rankingYaCalculado = false;
+
 function finalizarYCalcularRanking() {
+    // 🛑 CANDADO: Si ya se calculó en este ciclo de juego, salimos inmediatamente
+    if (rankingYaCalculado) {
+        console.warn("⚠️ Intento de doble cálculo de ranking bloqueado.");
+        return;
+    }
+    rankingYaCalculado = true; // Activamos el candado
+
+    // Volvemos a levantar el nombre por las dudas de que haya quedado viejo en memoria
+    const nombreActualizado = localStorage.getItem('nombreUsuarioActual') || 'Anónimo';
+
     const vivas = motor.gameObjects.filter(obj => obj.isBacteria && !obj.isDead && !obj.modoZombieActivo);
     const perfectas = motor.gameObjects.filter(obj => obj.isBacteria && !obj.isDead && obj.nuncaTocadaPorVirus);
 
@@ -261,14 +285,29 @@ function finalizarYCalcularRanking() {
     const puntosPorPerfectas = perfectas.length * 300;
     const puntajeFinal = puntosPorVivas + puntosPorPerfectas;
 
-    console.log(` Resultados: Vivas (${vivas.length}) | Intactas (${perfectas.length})`);
+    console.log(`📊 GUARDANDO RANKING -> Usuario: ${nombreActualizado} | Puntos: ${puntajeFinal}`);
 
-    let ranking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
-    ranking.push({ nombre: nombreUsuario, puntaje: puntajeFinal, fecha: new Date().toLocaleDateString() });
+    let ranking = [];
+    try {
+        ranking = JSON.parse(localStorage.getItem('rankingBacterias')) || [];
+    } catch(e) {
+        ranking = [];
+    }
+    
+    // Insertamos la partida actual con el nombre fresco
+    ranking.push({ 
+        nombre: nombreActualizado, 
+        puntaje: puntajeFinal, 
+        fecha: new Date().toLocaleDateString() 
+    });
+    
+    // Ordenamos y top 5
     ranking.sort((a, b) => b.puntaje - a.puntaje);
-    ranking = ranking.slice(0, 5); // Almacena el top 5
+    ranking = ranking.slice(0, 5);
+    
     localStorage.setItem('rankingBacterias', JSON.stringify(ranking));
     
+    // Mostramos los carteles visuales
     if (vivas.length === 0) {
         document.getElementById('game-over-screen').style.display = 'flex';
     } else {

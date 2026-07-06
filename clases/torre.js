@@ -119,7 +119,7 @@ export default class Torre {
                 const algunaBacteria = this.motor.gameObjects.find(o => o.isBacteria);
                 if (algunaBacteria) {
                     const BacteriaClase = algunaBacteria.constructor;
-                    const recursoSana = PIXI.Assets.get('bacteriaSana');
+                    const recursoSana = PIXI.Assets.get('bacteriaCurada');
 
                     new BacteriaClase(
                         obj.posicion.x,
