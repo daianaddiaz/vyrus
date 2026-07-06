@@ -117,7 +117,7 @@ function crearBotonTorreUI() {
         text: '',
         style: {
             fontFamily: 'Tourney',
-            fontSize: Math.floor(28), // Fluido con la pantalla
+            fontSize: Math.floor(28), 
             fill: '#ffffff',
             stroke: '#000000',
             strokeThickness: 5,
@@ -156,7 +156,7 @@ function crearBotonTorreUI() {
         torreFantasma.y = posGlobal.y;
     });
 
-    // EVENTO: Mover el fantasma con el mouse/dedo por el escenario
+    // Mover el fantasma con el mouse/dedo por el escenario
     motor.app.stage.eventMode = 'static';
     motor.app.stage.on('pointermove', (event) => {
         if (torreFantasma) {
@@ -165,7 +165,7 @@ function crearBotonTorreUI() {
         }
     });
 
-    // EVENTO: Soltar y plantar la estructura táctica
+   
     const soltarTorre = () => {
         if (!torreFantasma) return;
 
@@ -189,7 +189,7 @@ function crearBotonTorreUI() {
             }
         }
 
-        // Si interfiere con el campo del Alfa, se cancela la acción y se conserva el tiro
+        
 
         if (zonaBloqueada) {
             console.log("❌ ZONA INHIBIDA: El Virus Alfa interfiere con la torre de sanidad.");
@@ -198,13 +198,13 @@ function crearBotonTorreUI() {
             return; 
         }
 
-        // Si la zona es segura, destruimos el fantasma y plantamos la torre física
+       
         torreFantasma.destroy();
         torreFantasma = null;
 
         new Torre(xFinal, yFinal, motor, spritesheetTorre, 'escenario');
 
-        // ⏳ Activamos el cooldown de la botonera por 20 segundos (1200 frames a 60 FPS)
+        
         enCooldown = true;
         tiempoCooldown = 10 * 60;
         torreUI.cambiarAnimacion('cooldown');
@@ -237,7 +237,7 @@ function crearBotonTorreUI() {
     motor.app.stage.on('pointerupoutside', soltarTorre);
 }
 
-iniciarJuego(); // Ejecución inicial
+iniciarJuego(); 
 
 
 function verificarFinDePartida() {
@@ -275,5 +275,5 @@ function finalizarYCalcularRanking() {
         document.getElementById('victory-screen').style.display = 'flex';
     }
 }
-    
+
 window.finalizarYCalcularRanking = finalizarYCalcularRanking;

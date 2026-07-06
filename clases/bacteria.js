@@ -25,7 +25,7 @@ export default class EntidadJuego {
       this.container.alpha = 0.8; // Un toque sutil de transparencia para identificarlas
     }
 
-    // IA DE MOVIMIENTO ALEATORIO
+    // MOVIMIENTO ALEATORIO
     this.tiempoParaCambiar = 0;
 
     this.motor.gameObjects.push(this);

@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
         
-        /* 🚪 Estilos para la capa de Login integrada */
+        
         #inicio-screen {
             position: fixed;
             top: 0;
@@ -16,7 +16,7 @@
             width: 100vw;
             height: 100vh;
             background-color: #030508;
-            z-index: 10000; /* Se superpone a todo al arrancar */
+            z-index: 10000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -70,7 +70,7 @@
             <h1>INGRESE SU USERNAME</h1>
             <input type="text" id="username-input" placeholder="BIOLOGO_123" maxlength="15" autocomplete="off">
             <br>
-            <!-- Usamos tus clases nativas de botones de estilos.css -->
+            
             <button id="btn-comenzar-juego" class="pixel-btn" style="padding: 12px 35px; font-size: 16px;">JUGAR</button>
         </div>
     </div>
@@ -105,14 +105,14 @@
             </div>
         </div>
 
-        <!-- Mantenemos el div original por compatibilidad de IDs en tus scripts anteriores -->
+        
         <div id="ranking-screen" style="display: none;"></div>
 
     </div>
 
-    <!-- Script exclusivo para el flujo de la pantalla de bienvenida -->
+    
     <script>
-        // Foco automático en el input al cargar la página
+        
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('username-input').focus();
         });
@@ -124,18 +124,18 @@
                 return;
             }
             
-            // 1. Guardamos en localStorage para que tus scripts lean el nombre desde ahí
+           
             localStorage.setItem('nombreUsuarioActual', nombreInput);
             
-            // 2. Seteamos la variable en el entorno window por si el código busca la variable global
+            
             window.nombreUsuario = nombreInput;
             
-            // 3. Ocultamos el login y empieza la acción
+           
             document.getElementById('inicio-screen').style.display = 'none';
         });
     </script>
 
-    <!-- Tus módulos JavaScript intactos y sin tocar -->
+    
     <script type="module" src="./clases/gameObject.js"></script>
     <script type="module" src="./clases/bacteria.js"></script>
     <script type="module" src="./clases/virus.js"></script>
