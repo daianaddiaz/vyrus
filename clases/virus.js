@@ -11,6 +11,7 @@ export default class Virus {
         this.radio = 15;
         this.isDead = false;
         this.isVirus = true;
+        this.estaAtacando = false;
 
         
         this.esAlfa = esAlfa;
@@ -45,10 +46,10 @@ export default class Virus {
         }
 
         this.animacionActual = null;
-        this.direccionMirada = 'derecha'; 
+        this.direccionMirada = 'ataqueDerecha'; 
 
         
-        this.cambiarAnimacion('idle_derecha');
+        this.cambiarAnimacion('ataqueIzquierda');
     }
 
     cambiarAnimacion(cual) {
@@ -146,7 +147,7 @@ export default class Virus {
 
             if (objetivoCercano) {
                 const angulo = Math.atan2(objetivoCercano.posicion.y - this.posicion.y, objetivoCercano.posicion.x - this.posicion.x);
-                const fuerza = this.esAlfa ? 0.8 : 0.4;
+                const fuerza = this.esAlfa ? 0.8 : 0.5;
                 this.aceleracion.x = Math.cos(angulo) * fuerza;
                 this.aceleracion.y = Math.sin(angulo) * fuerza;
             } else {
@@ -157,37 +158,73 @@ export default class Virus {
         }
     }
 
+    ejecutarAtaque() {
+
+        if (this.estaAtacando) return; // Evita spamear el ataque si ya lo está haciendo
+            this.estaAtacando = true;
+            const lado = this.velocidad.x >= 0 ? 'Derecha' : 'Izquierda';
+            this.cambiarAnimacion(`ataque${lado}`);
+            setTimeout(() => {
+            this.estaAtacando = false;
+        }, 500); 
+}
+
     propagarInfeccion() {
-        const radioContagio = 40;
+    const radioContagio = 30; 
+    const fuerzaRebote = 3.5;  
 
-        for (let obj of this.motor.gameObjects) {
-            if (obj.isBacteria && !obj.isDead && !obj.modoZombieActivo && !obj.esCurada) {
-                const dx = obj.posicion.x - this.posicion.x;
-                const dy = obj.posicion.y - this.posicion.y;
-                const distancia = Math.sqrt(dx * dx + dy * dy);
+    for (let obj of this.motor.gameObjects) {
+        if (obj.isBacteria && !obj.isDead) {
+            const dx = obj.posicion.x - this.posicion.x;
+            const dy = obj.posicion.y - this.posicion.y;
+            const distancia = Math.sqrt(dx * dx + dy * dy);
 
-                if (distancia < radioContagio) {
-                    console.log("¡Mutación iniciada!");
-                    obj.modoZombieActivo = true; 
+           
+            if (distancia < radioContagio) {
+                
+                // direccion del impacto            
+                const nx = distancia > 0 ? dx / distancia : Math.random() - 0.5;
+                const ny = distancia > 0 ? dy / distancia : Math.random() - 0.5;
+
+                // fuerza de separacion 
+                this.velocidad.x = -nx * fuerzaRebote;
+                this.velocidad.y = -ny * fuerzaRebote;
+
+                // Opcional: A la bacteria también la empujamos un poquito hacia adelante para que se note el choque
+                obj.velocidad.x += nx * (fuerzaRebote * 0.5);
+                obj.velocidad.y += ny * (fuerzaRebote * 0.5);
+
+                //reset del patrullaje 
+                this.tiempoParaCambiar = Math.random() * 30 + 15;
+
+                if (!obj.modoZombieActivo && !obj.esCurada) {
+                    console.log("¡Mutación iniciada por contacto!");
+                    obj.modoZombieActivo = true;
+                    if (typeof this.ejecutarAtaque === 'function') {
+                        this.ejecutarAtaque();
+                    }
                 }
             }
         }
     }
+}
 
    
     controlarAnimacionPorVelocidad() {
-       
-        if (this.velocidad.x > 0.05) {
-            this.direccionMirada = 'derecha';
-        } else if (this.velocidad.x < -0.05) {
-            this.direccionMirada = 'izquierda';
+       if (this.estaAtacando) return;
+
+        if (this.velocidad.x > 0.5) {
+            this.direccionMirada = 'Derecha';
+        } else if (this.velocidad.x < -0.2) {
+            this.direccionMirada = 'Izquierda';
         }
 
         
-        const claveDeseada = `idle_${this.direccionMirada}`;
+        const claveDeseada = `idle${this.direccionMirada}`;
         this.cambiarAnimacion(claveDeseada);
     }
 
+    
     update() {
         this.iaPersecucion();
         this.aplicarFisica();

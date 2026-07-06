@@ -3,7 +3,8 @@ export default class EntidadJuego {
     this.motor = motor;
     this.container = new PIXI.Container();
     
-    // FÍSICA BASE
+    // Fisicas Basicas
+    
     this.posicion = { x: x, y: y };
     this.velocidad = { x: 0, y: 0 };
     this.aceleracion = { x: 0, y: 0 };
@@ -13,7 +14,8 @@ export default class EntidadJuego {
     this.isBacteria = true;
     this.modoZombieActivo = false; 
 
-    // 🔥 LÓGICA DE INMUNIDAD Y VIDA LIMITADA PARA CURADAS
+    // Logica de Vida
+
     this.esCurada = esCurada; 
     if (this.esCurada) {
       this.tiempoVidaRestante = 5 * 60; // 5 segundos exactos a 60 FPS
@@ -136,31 +138,46 @@ export default class EntidadJuego {
   }
 
   update() {
-    // 🔥 CONTROL DE TIEMPO DE VIDA PARA BACTERIAS CURADAS
-    if (this.esCurada) {
-        this.tiempoVidaRestante--;
-        
-        // Efecto parpadeo en el último segundo para avisar que desaparece
-        if (this.tiempoVidaRestante < 60 && this.tiempoVidaRestante % 10 < 5) {
-            this.container.visible = false;
-        } else {
-            this.container.visible = true;
-        }
 
-        if (this.tiempoVidaRestante <= 0) {
-            this.isDead = true;
-            if (this.container) {
-                this.container.destroy({ children: true });
-            }
-            return; // Interrumpimos el update
-        }
+    if (this.esCurada) {
+    this.tiempoVidaRestante--;
+    
+    // Efecto parpadeo opcional en el último segundo para avisar que se le va el escudo
+
+    if (this.tiempoVidaRestante < 60 && this.tiempoVidaRestante % 10 < 5) {
+        this.container.alpha = 0.3; 
+    } else {
+        this.container.alpha = 1.0;
     }
+
+    if (this.tiempoVidaRestante <= 0) {
+        console.log("¡Escudo agotado! Reinvocando como bacteria común contagiable.");
+        
+        const recursoSana = PIXI.Assets.get('bacteriaSana'); 
+        const BacteriaClase = this.constructor; 
+
+        new BacteriaClase(
+            this.posicion.x,
+            this.posicion.y,
+            this.motor,
+            recursoSana,
+            'idle', 
+            false // Nace expuesta al contagio
+        );
+
+        this.isDead = true;
+        if (this.container) {
+            this.container.destroy({ children: true });
+        }
+        return;
+    }
+}
 
     this.iaPatrullaje();
     this.aplicarFisica();
     this.controlarAnimacionPorVelocidad();
 
-    if (this.modoZombieActivo && !this.isDead) {
+   if (this.modoZombieActivo && !this.isDead) {
         this.isDead = true;
         if (this.container) {
             this.container.destroy({ children: true });
@@ -178,7 +195,7 @@ export default class EntidadJuego {
             );
         }
         return; 
-    }
+    } 
 
     this.container.x = this.posicion.x;
     this.container.y = this.posicion.y;

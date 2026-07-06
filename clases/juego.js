@@ -154,6 +154,7 @@ function crearBotonTorreUI() {
         }
 
         // Si interfiere con el campo del Alfa, se cancela la acción y se conserva el tiro
+        
         if (zonaBloqueada) {
             console.log("❌ ZONA INHIBIDA: El Virus Alfa interfiere con la torre de sanidad.");
             torreFantasma.destroy();

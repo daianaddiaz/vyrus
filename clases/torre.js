@@ -8,7 +8,7 @@ export default class Torre {
     this.container.x = x;
     this.container.y = y;
     
-    this.radioCuracion = 120; 
+    this.radioCuracion = 150; 
     this.isDead = false;
     this.modo = modo; 
 
@@ -44,7 +44,7 @@ export default class Torre {
     } else {
       this.motor.containerPrincipal.addChild(this.container);
       this.cambiarAnimacion('curando');
-      this.tiempoVida = 20 * 60; 
+      this.tiempoVida = 15 * 60; 
 
       this.container.zIndex = 999; 
     }
@@ -59,7 +59,7 @@ export default class Torre {
   }
 
   empujarEntidadesEnRango() {
-    const fuerzaRepulsion = 1.5; 
+    const fuerzaRepulsion = 0.5; 
 
     for (let obj of this.motor.gameObjects) {
       const esEntidadViva = (obj.isBacteria || obj.isVirus) && !obj.isDead;
@@ -99,6 +99,7 @@ export default class Torre {
 
   ejecutarSanidad() {
     for (let obj of this.motor.gameObjects) {
+        // Cura únicamente a los virus comunes (los rojos mutados vivos)
         if (obj.isVirus && !obj.esAlfa && !obj.isDead) {
             
             const dx = obj.posicion.x - this.posicion.x;
@@ -106,13 +107,15 @@ export default class Torre {
             const distancia = Math.sqrt(dx * dx + dy * dy);
 
             if (distancia < this.radioCuracion) {
-                console.log("✨ ¡Virus curado y revertido a bacteria!");
+                console.log("¡Virus curado y revertido a bacteria!");
                 
+                // Destruimos el virus
                 obj.isDead = true;
                 if (obj.container) {
                     obj.container.destroy({ children: true });
                 }
 
+                // Spawneamos una bacteria sana
                 const algunaBacteria = this.motor.gameObjects.find(o => o.isBacteria);
                 if (algunaBacteria) {
                     const BacteriaClase = algunaBacteria.constructor;
@@ -123,8 +126,8 @@ export default class Torre {
                         obj.posicion.y,
                         this.motor,
                         recursoSana,
-                        'idle', // O la animación inicial por defecto de tu bacteria
-                        true 
+                        'idle', 
+                        true
                     );
                 }
             }

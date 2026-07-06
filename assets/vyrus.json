@@ -771,10 +771,10 @@
   },
 
   "animations": {
-    "idle_derecha": ["00.png","01.png","02.png","03.png"],
-    "idle_izquierda": ["08.png","09.png","10.png","11.png"],
-    "ataque_derecha": ["16.png","17.png","18.png","19.png","20.png","21.png","22.png","23.png"],
-    "ataque_izquierda":["24.png","25.png","26.png","27.png","28.png","29.png","30.png","31.png"]
+    "idleDerecha": ["00.png","01.png","02.png","03.png"],
+    "idleIzquierda": ["08.png","09.png","10.png","11.png"],
+    "ataqueDerecha": ["16.png","17.png","18.png","19.png","20.png","21.png","22.png","23.png"],
+    "ataqueIzquierda":["24.png","25.png","26.png","27.png","28.png","29.png","30.png","31.png"]
   },
 
   "meta": {
